@@ -1,6 +1,7 @@
 import arcade
 import random
 import time
+import pygame
 
 SPRITE_SCALING = 0.025
 BOX_SCALING = 0.1
@@ -26,6 +27,12 @@ def locator(x_inp, y_inp):
     y_cord = (y_inp) * 31 + y_inp + 1
             
     return x_cord, y_cord
+
+def playMusic():
+
+    pygame.mixer.init()
+    pygame.mixer.music.load("mainMusic.mp3")
+    pygame.mixer.music.play()
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -231,6 +238,7 @@ class MyGame(arcade.Window):
             ghost.kill()
             self.boo_state = VISIBLE_BOO
             self.score-=2
+            arcade.sound.play_sound ("ScreamSound.wav")
 
         if self.score < 0:
             self.current_state = GAME_OVER
@@ -256,6 +264,7 @@ def main():
     """ Main method """
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     window.setup()
+    playMusic()
     arcade.run()
 
 
