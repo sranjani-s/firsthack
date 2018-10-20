@@ -1,19 +1,27 @@
 import arcade
 import random
 
-SPRITE_SCALING = 0.05
+SPRITE_SCALING = 0.025
 BOX_SCALING = 0.1
 APPLE_SCALING = 0.05
 GHOST_SCALING = 0.07
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1024
+SCREEN_HEIGHT = 768
 
 NUMBER_OF_COINS = 25
 NUMBER_OF_GHOSTS = 3
 
 MOVEMENT_SPEED = 5
 
+GAME_RUNNING = 0
+GAME_OVER = 1
+
+def locator(x_inp, y_inp):	
+    x_cord = (x_inp) * 31 + x_inp + 1
+    y_cord = (y_inp) * 31 + y_inp + 1
+            
+    return x_cord, y_cord
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -33,6 +41,8 @@ class MyGame(arcade.Window):
         self.wall_list = None
         self.physics_engine = None
 
+        self.current_state = GAME_RUNNING
+
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -48,14 +58,52 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 64
 
-        # -- Set up the walls
-        # Create a series of horizontal walls
-        for y in range(0, 800, 200):
-            for x in range(100, 700, 64):
-                wall = arcade.Sprite("box.png", BOX_SCALING)
-                wall.center_x = x
-                wall.center_y = y
-                self.wall_list.append(wall)
+#MAPPING START ###################################################
+
+        mapArray = []
+
+        mapFile = open("map.txt","r")
+
+        content = mapFile.readline()
+
+        line = 1
+
+        while content:
+
+           mapArray.append(content)
+
+           content = mapFile.readline()
+
+        """ SET UP THE MAIN MAP FILE """
+        MapFinal = []
+        for row in range(32):
+            MapRow = ['']
+            for column in range(24):
+                MapColumn = ['']
+                MapRow.append(MapColumn)
+            MapFinal.append(MapRow)
+
+        for a in range(32):
+            for b in range(24):
+                if mapArray[a][b] == "w":
+                    MapFinal[a][b] = "w"
+                elif mapArray[a][b] == "t":
+                    MapFinal[a][b] = "t"
+                elif mapArray[a][b] == "-":
+                    MapFinal[a][b] = "-"
+
+        
+        for x in range(32):
+            for y in range(24):
+
+                if MapFinal[x][y] == 'w':
+                    x_block, y_block = locator(x,y)
+                    wall = arcade.Sprite("box.png", BOX_SCALING)
+                    wall.center_x = x_block
+                    wall.center_y = y_block
+                    self.wall_list.append(wall)
+
+        ## MAPPING END #############################################
 
         # -- Randomly place coins where there are no walls
         # Create the coins
@@ -130,7 +178,14 @@ class MyGame(arcade.Window):
         self.player_sprite.draw()
 
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 700, 550, arcade.color.WHITE, 14)
+        arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
+
+        if self.current_state == GAME_OVER:
+            self.draw_game_over()
+        else:
+            self.wall_list.draw()
+            self.coin_list.draw()
+            self.player_sprite.draw()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
@@ -163,10 +218,24 @@ class MyGame(arcade.Window):
 
         for ghost in ghosts_hit_list:
             ghost.kill()
+            #boo = arcade.Sprite("boo.png", 1)
+            #self.boo.draw()
+            #self.boo.kill()
             self.score-=2
+
+        if self.score < 0:
+            self.current_state = GAME_OVER
+            
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
+
+    def draw_game_over(self):
+        output = "Game Over"
+        arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
+
+        #output = "Click to restart"
+        #arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
 
 
 def main():
