@@ -23,7 +23,7 @@ GAME_WON = 2
 INVISIBLE_BOO = 0
 VISIBLE_BOO = 1
 
-def locator(x_inp, y_inp):	
+def locator(x_inp, y_inp):  
 
     x_cord = (x_inp) * 31 + x_inp + 1
     y_cord = (y_inp) * 31 + y_inp + 1
@@ -82,6 +82,9 @@ class MyGame(arcade.Window):
 
         self.boo_sprite = arcade.Sprite("boo.png", 1)
         self.boo_sprite.set_position(500,500)
+
+        self.game_over_sprite = arcade.Sprite("game_over.png",1)
+        self.game_over_sprite.set_position(500,500)
 
         
 
@@ -176,8 +179,9 @@ class MyGame(arcade.Window):
                 wall_hit_list = arcade.check_for_collision_with_list(ghost, self.wall_list)
                 coin_hit_list = arcade.check_for_collision_with_list(ghost, self.coin_list)
                 ghost_hit_list = arcade.check_for_collision_with_list(ghost, self.ghost_list)
-
-                if len(wall_hit_list)==0 and len(coin_hit_list)==0:
+                player_hit_list = arcade.check_for_collision(ghost, self.player_sprite)
+                
+                if len(wall_hit_list)==0 and len(coin_hit_list)==0 and len(ghost_hit_list)== 0 and (player_hit_list)==0:
                     ghost_placed_successfully = True
 
             self.ghost_list.append(ghost)
@@ -189,7 +193,7 @@ class MyGame(arcade.Window):
         self.physics_engine = arcade.PhysicsEngineSimple(self.player_sprite, self.wall_list)
 
         # Set the background color
-        arcade.set_background_color(arcade.color.AMAZON)
+        arcade.set_background_color(arcade.color.BLACK)
 
     def on_draw(self):
         """
@@ -269,6 +273,7 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
 
     def draw_game_over(self):
+        self.game_over_sprite.draw()
         output = "GAME OVER"
         arcade.draw_text(output, 350, 450, arcade.color.WHITE, 54)
 
