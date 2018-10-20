@@ -197,8 +197,10 @@ class MyGame(arcade.Window):
         else:
             # Draw all the sprites.
             self.wall_list.draw()
+            for ghost in self.ghost_list:
+                if abs(ghost.center_x - self.player_sprite.center_x) < 100 and abs(ghost.center_y - self.player_sprite.center_y) < 100:
+                    ghost.draw()
             self.coin_list.draw()
-            self.ghost_list.draw()
             self.player_sprite.draw()
             output = f"Score: {self.score}"
             arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
@@ -217,6 +219,9 @@ class MyGame(arcade.Window):
                 self.player_sprite.change_x = -MOVEMENT_SPEED
             elif key == arcade.key.RIGHT:
                 self.player_sprite.change_x = MOVEMENT_SPEED
+
+
+
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -258,7 +263,7 @@ class MyGame(arcade.Window):
         arcade.draw_text(output, 350, 450, arcade.color.WHITE, 54)
 
         output = "Click anywhere to restart"
-        arcade.draw_text(output, 350, 300, arcade.color.WHITE, 24)
+        arcade.draw_text(output, 360, 300, arcade.color.WHITE, 24)
 
     def draw_boo(self):
         self.boo_sprite.draw()
