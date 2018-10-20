@@ -19,13 +19,15 @@ MOVEMENT_SPEED = 5
 GAME_RUNNING = 0
 GAME_OVER = 1
 
+
 INVISIBLE_BOO = 0
 VISIBLE_BOO = 1
 
 def locator(x_inp, y_inp):	
+
     x_cord = (x_inp) * 31 + x_inp + 1
     y_cord = (y_inp) * 31 + y_inp + 1
-            
+
     return x_cord, y_cord
 
 def playMusic():
@@ -70,10 +72,12 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 64
 
+
         self.boo_sprite = arcade.Sprite("boo.png", 1)
         self.boo_sprite.set_position(500,500)
 
 #MAPPING START ###################################################
+
 
         mapArray = []
 
@@ -85,9 +89,9 @@ class MyGame(arcade.Window):
 
         while content:
 
-           mapArray.append(content)
+            mapArray.append(content)
 
-           content = mapFile.readline()
+            content = mapFile.readline()
 
         """ SET UP THE MAIN MAP FILE """
         MapFinal = []
@@ -107,7 +111,7 @@ class MyGame(arcade.Window):
                 elif mapArray[a][b] == "-":
                     MapFinal[a][b] = "-"
 
-        
+
         for x in range(32):
             for y in range(24):
 
@@ -168,8 +172,8 @@ class MyGame(arcade.Window):
                     ghost_placed_successfully = True
 
             self.ghost_list.append(ghost)
-                
-                    
+
+
 
             # --- END OF IMPORTANT PART ---
 
@@ -186,36 +190,33 @@ class MyGame(arcade.Window):
         # This command has to happen before we start drawing
         arcade.start_render()
 
-        # Draw all the sprites.
-        self.wall_list.draw()
-        self.coin_list.draw()
-        self.ghost_list.draw()
-        self.player_sprite.draw()
-
-        output = f"Score: {self.score}"
-        arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
-
+        # Check what is the current state
         if self.current_state == GAME_OVER:
+            # Draw game over screen.
             self.draw_game_over()
         else:
+            # Draw all the sprites.
             self.wall_list.draw()
             self.coin_list.draw()
+            self.ghost_list.draw()
             self.player_sprite.draw()
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
 
         if self.boo_state == VISIBLE_BOO:
             self.draw_boo()
 
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
-
-        if key == arcade.key.UP:
-            self.player_sprite.change_y = MOVEMENT_SPEED
-        elif key == arcade.key.DOWN:
-            self.player_sprite.change_y = -MOVEMENT_SPEED
-        elif key == arcade.key.LEFT:
-            self.player_sprite.change_x = -MOVEMENT_SPEED
-        elif key == arcade.key.RIGHT:
-            self.player_sprite.change_x = MOVEMENT_SPEED
+        if self.current_state == GAME_RUNNING:
+            if key == arcade.key.UP:
+                self.player_sprite.change_y = MOVEMENT_SPEED
+            elif key == arcade.key.DOWN:
+                self.player_sprite.change_y = -MOVEMENT_SPEED
+            elif key == arcade.key.LEFT:
+                self.player_sprite.change_x = -MOVEMENT_SPEED
+            elif key == arcade.key.RIGHT:
+                self.player_sprite.change_x = MOVEMENT_SPEED
 
     def on_key_release(self, key, modifiers):
         """Called when the user releases a key. """
@@ -224,6 +225,11 @@ class MyGame(arcade.Window):
             self.player_sprite.change_y = 0
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if self.current_state == GAME_OVER:
+            self.setup()
+            self.current_state = GAME_RUNNING
 
     def update(self, delta_time):
         """ Movement and game logic """
@@ -242,17 +248,17 @@ class MyGame(arcade.Window):
 
         if self.score < 0:
             self.current_state = GAME_OVER
-            
+
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
 
     def draw_game_over(self):
-        output = "Game Over"
-        arcade.draw_text(output, 240, 400, arcade.color.WHITE, 54)
+        output = "GAME OVER"
+        arcade.draw_text(output, 350, 450, arcade.color.WHITE, 54)
 
-        #output = "Click to restart"
-        #arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+        output = "Click anywhere to restart"
+        arcade.draw_text(output, 350, 300, arcade.color.WHITE, 24)
 
     def draw_boo(self):
         self.boo_sprite.draw()
