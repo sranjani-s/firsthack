@@ -36,6 +36,12 @@ def playMusic():
     pygame.mixer.music.load("mainMusic.mp3")
     pygame.mixer.music.play()
 
+def winMusic():
+
+    pygame.mixer.init()
+    pygame.mix.music.load("tada.mp3")
+    pygame.mixer.music.play()
+
 class MyGame(arcade.Window):
     """ Main application class. """
 
@@ -75,6 +81,8 @@ class MyGame(arcade.Window):
 
         self.boo_sprite = arcade.Sprite("boo.png", 1)
         self.boo_sprite.set_position(500,500)
+
+        
 
 #MAPPING START ###################################################
 
