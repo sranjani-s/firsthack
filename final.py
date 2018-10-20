@@ -8,7 +8,7 @@ APPLE_SCALING = 0.05
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
-NUMBER_OF_COINS = 50
+NUMBER_OF_COINS = 25
 
 MOVEMENT_SPEED = 5
 
@@ -38,6 +38,7 @@ class MyGame(arcade.Window):
         self.all_sprites_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         self.coin_list = arcade.SpriteList()
+        self.ghost_list = arcade.SpriteList()
 
         # Set up the player
         self.score = 0
@@ -58,8 +59,6 @@ class MyGame(arcade.Window):
         # Create the coins
         for i in range(NUMBER_OF_COINS):
 
-            # Create the coin instance
-            # Coin image from kenney.nl
             coin = arcade.Sprite("apple.png", APPLE_SCALING)
 
             # --- IMPORTANT PART ---
@@ -83,6 +82,8 @@ class MyGame(arcade.Window):
                     # It is!
                     coin_placed_successfully = True
 
+            #Create the ghosts
+                    
             # Add the coin to the lists
             self.coin_list.append(coin)
 
@@ -106,6 +107,9 @@ class MyGame(arcade.Window):
         self.coin_list.draw()
         self.player_sprite.draw()
 
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 700, 550, arcade.color.WHITE, 14)
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
 
@@ -128,7 +132,11 @@ class MyGame(arcade.Window):
 
     def update(self, delta_time):
         """ Movement and game logic """
+        coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
 
+        for coin in coins_hit_list:
+            coin.kill()
+            self.score+=1
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
