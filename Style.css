@@ -1,0 +1,236 @@
+/*
+- format is: selctor { property(background-colour): value(yellow); }
+- f4f4f4; gives light grey
+- #555555; gives dark grey
+- font weight can = bold aswell as various numerical values
+- Line height - separates lines out.
+
+- margin:0; gets rid of space around the paragraph
+- To target a class .box-1{}
+- .container will reduce the space width wise that paragraph takes up
+- margin:auto sends text to the middle
+- toppx rightpx bottompx leftpx;
+
+- margin:0; padding:0; removes the intital padding by default
+
+-
+
+*/
+
+*{
+  margin:0;
+  padding:0;
+}
+
+body{
+    background-color:#f4f4f4;
+    color:#555555;
+
+    font: normal 16px Arial, Helvetica, sans-serif;
+
+    line-height:1.6em;
+    margin:0;
+}
+/*Below are global styles-apply to any link on page*/
+a{
+    text-decoration: none;
+    color:#000;
+}
+/*Hover over a link and it will turn red*/
+a:hover{
+    color:red;
+}
+/*When you click, text flashes green */
+a:active{
+  color:green;
+}
+
+a:visited{
+  color:black; /*colour once you've clicked link*/
+}
+
+.container{
+  width:80%;
+  margin:auto
+
+}
+/*clear:both clears floats below or above to not mess it up*/
+.clr{
+    clear:both;
+}
+
+.box-1{
+  background-color:#333;
+  color:#fff;
+
+
+  border-right: 5px red solid;
+  border-left: 5px red solid;
+  border-top: 5px red solid;
+  border-bottom: 5px red solid;
+  border-bottom-width:5px;
+  border-top-style:dotted;
+
+/* same as above */
+  border:5px red solid;
+
+  padding:20px;
+
+
+  margin-top:20px;
+  margin:20px 0;
+
+
+}
+
+.box-1 h1{ /* change font of header only */
+  font-family:Tahoma;
+  font-weight:800;
+  font-style:italic;
+  text-decoration:underline;
+  line-height:2em;
+  text-transform:uppercase;
+  letter-spacing: 0.1em;
+  word-spacing: 0.1em;
+
+}
+
+.box-2{
+  border:3px dotted #ccc; /*#ccc is light grey*/
+  padding:20px;
+  margin:20px 0;
+}
+
+.categories{
+  border:1px #ccc solid;
+  padding:10px;
+  border-radius:15px; /*Rounds the edges*/
+}
+
+.categories h2{
+  text-align:center;
+}
+
+.categories ul{
+  padding:0;
+  list-style:square;
+  list-style:none;
+}
+
+.categories li{
+    padding-bottom:8px;
+    border-bottom:dotted 1px #333;
+    list-style-image: url('../check.png');
+}
+
+/* Adding style to form*/
+.my-form{
+    padding:20px
+}
+
+.my-form .form-group{
+  padding-bottom:15px;
+}
+
+.my-form label{
+  display:block;
+}
+
+/*.my-form text area will make the text area specifically bigger*/
+.my-form input[type="text"], .my-form textarea{ /* type= "text" maeans size of submit button
+                                will not change as it isn't text*/
+  width:100%
+  padding:8px;
+  width:100%;
+}
+
+/*Adding style to submit button*/
+.button{
+  background-color:#333;
+  color:#fff;
+  padding: 10px 15px;
+  border: none;
+}
+
+/* Changes colour when you hover over it */
+.button:hover{
+  background:red;
+  color:#fff;
+}
+
+/* Adding style to paragraphs (3 blocks of text side by side)*/
+.block{
+  float:left;
+  width:33.3%;
+  border:1px solid #ccc;
+  padding:10px;
+  box-sizing:border-box;
+}
+
+/*Main text*/
+#main-block{
+  float:left;
+  width:70%
+  padding:15px;
+  box-sizing: border-box;
+}
+
+/*side text on right-hand side*/
+#sidebar{
+  float:right;
+  width:30%;
+  background-color:#333;
+  color:#fff;
+  padding:15px;
+  box-sizing: border-box;
+}
+
+/*Position static by default*/
+.p-box{
+    width:800px;
+    height:500px;
+    border:1px solid #000;
+    margin-top:30px;
+    position:relative;
+    background-image:url('../Images/bg_image.jpg');
+}
+
+/* Postion absolute*/
+.p-box h1{
+    position:absolute;
+    top:100px;
+    left:200px;
+}
+
+.p-box h2{
+  position:absolute;
+  bottom:40px;
+  right:100px;
+}
+
+/*Fixed positioning*/
+.fix-me{
+  position:fixed;
+  top:400px;
+
+}
+
+/*First li background red*/
+.my-list li:first-child{
+    background: red;
+}
+
+/*Last li background blue*/
+.my-list li:last-child{
+    background: blue;
+}
+
+/*5th li background yellow*/
+.my-list li:nth-child(5){
+  background: yellow;
+}
+
+/*Every even li background grey*/
+.my-list li:nth-child(even){
+  background: grey;
+}
