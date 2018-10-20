@@ -1,3 +1,9 @@
+"""
+Halloween Game Project 2018 : Pumpkin Rush
+
+Authors : Sivaranjani Subramanian, Terry Phung, William Zard, Adam Wangrat, Dami Oshidele
+"""
+
 import arcade
 import random
 import time
@@ -212,8 +218,10 @@ class MyGame(arcade.Window):
         else:
             # Draw all the sprites.
             self.wall_list.draw()
+            for ghost in self.ghost_list:
+                if abs(ghost.center_x - self.player_sprite.center_x) < 100 and abs(ghost.center_y - self.player_sprite.center_y) < 100:
+                    ghost.draw()
             self.coin_list.draw()
-            self.ghost_list.draw()
             self.player_sprite.draw()
             output = f"Score: {self.score}"
             arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
