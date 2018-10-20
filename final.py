@@ -204,6 +204,11 @@ class MyGame(arcade.Window):
         elif key == arcade.key.LEFT or key == arcade.key.RIGHT:
             self.player_sprite.change_x = 0
 
+    def on_mouse_press(self, x, y, button, modifiers):
+        if self.current_state == GAME_OVER:
+            self.setup()
+            self.current_state = GAME_RUNNING
+
     def update(self, delta_time):
         """ Movement and game logic """
         coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
@@ -228,11 +233,11 @@ class MyGame(arcade.Window):
         self.physics_engine.update()
 
     def draw_game_over(self):
-        output = "Game Over"
+        output = "GAME OVER"
         arcade.draw_text(output, 350, 450, arcade.color.WHITE, 54)
 
-        #output = "Click to restart"
-        #arcade.draw_text(output, 310, 300, arcade.color.WHITE, 24)
+        output = "Click anywhere to restart"
+        arcade.draw_text(output, 350, 300, arcade.color.WHITE, 24)
 
 
 def main():
