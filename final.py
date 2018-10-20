@@ -4,11 +4,13 @@ import random
 SPRITE_SCALING = 0.05
 BOX_SCALING = 0.1
 APPLE_SCALING = 0.05
+GHOST_SCALING = 0.07
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 NUMBER_OF_COINS = 25
+NUMBER_OF_GHOSTS = 3
 
 MOVEMENT_SPEED = 5
 
@@ -82,10 +84,29 @@ class MyGame(arcade.Window):
                     # It is!
                     coin_placed_successfully = True
 
-            #Create the ghosts
-                    
             # Add the coin to the lists
             self.coin_list.append(coin)
+
+
+        #Create the ghosts
+        for i in range(NUMBER_OF_GHOSTS):
+
+            ghost = arcade.Sprite("ghost.png", GHOST_SCALING)
+            ghost_placed_successfully = False
+            while not ghost_placed_successfully:
+                ghost.center_x = random.randrange(SCREEN_WIDTH)
+                ghost.center_y = random.randrange(SCREEN_HEIGHT)
+
+                wall_hit_list = arcade.check_for_collision_with_list(ghost, self.wall_list)
+                coin_hit_list = arcade.check_for_collision_with_list(ghost, self.coin_list)
+                ghost_hit_list = arcade.check_for_collision_with_list(ghost, self.ghost_list)
+
+                if len(wall_hit_list)==0 and len(coin_hit_list)==0:
+                    ghost_placed_successfully = True
+
+            self.ghost_list.append(ghost)
+                
+                    
 
             # --- END OF IMPORTANT PART ---
 
@@ -105,6 +126,7 @@ class MyGame(arcade.Window):
         # Draw all the sprites.
         self.wall_list.draw()
         self.coin_list.draw()
+        self.ghost_list.draw()
         self.player_sprite.draw()
 
         output = f"Score: {self.score}"
@@ -133,10 +155,15 @@ class MyGame(arcade.Window):
     def update(self, delta_time):
         """ Movement and game logic """
         coins_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.coin_list)
+        ghosts_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.ghost_list)
 
         for coin in coins_hit_list:
             coin.kill()
             self.score+=1
+
+        for ghost in ghosts_hit_list:
+            ghost.kill()
+            self.score-=2
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
