@@ -1,5 +1,7 @@
 import arcade
 import random
+import time
+import pygame
 
 SPRITE_SCALING = 0.025
 BOX_SCALING = 0.1
@@ -10,18 +12,29 @@ SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 
 NUMBER_OF_COINS = 25
-NUMBER_OF_GHOSTS = 3
+NUMBER_OF_GHOSTS = 15
 
 MOVEMENT_SPEED = 5
 
 GAME_RUNNING = 0
 GAME_OVER = 1
 
-def locator(x_inp, y_inp):
+
+INVISIBLE_BOO = 0
+VISIBLE_BOO = 1
+
+def locator(x_inp, y_inp):	
+
     x_cord = (x_inp) * 31 + x_inp + 1
     y_cord = (y_inp) * 31 + y_inp + 1
 
     return x_cord, y_cord
+
+def playMusic():
+
+    pygame.mixer.init()
+    pygame.mixer.music.load("mainMusic.mp3")
+    pygame.mixer.music.play()
 
 class MyGame(arcade.Window):
     """ Main application class. """
@@ -42,6 +55,7 @@ class MyGame(arcade.Window):
         self.physics_engine = None
 
         self.current_state = GAME_RUNNING
+        self.boo_state = INVISIBLE_BOO
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -58,7 +72,12 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 64
 
-        #MAPPING START ###################################################
+
+        self.boo_sprite = arcade.Sprite("boo.png", 1)
+        self.boo_sprite.set_position(500,500)
+
+#MAPPING START ###################################################
+
 
         mapArray = []
 
@@ -184,6 +203,9 @@ class MyGame(arcade.Window):
             output = f"Score: {self.score}"
             arcade.draw_text(output, 900, 600, arcade.color.WHITE, 14)
 
+        if self.boo_state == VISIBLE_BOO:
+            self.draw_boo()
+
     def on_key_press(self, key, modifiers):
         """Called whenever a key is pressed. """
         if self.current_state == GAME_RUNNING:
@@ -220,10 +242,9 @@ class MyGame(arcade.Window):
 
         for ghost in ghosts_hit_list:
             ghost.kill()
-            #boo = arcade.Sprite("boo.png", 1)
-            #self.boo.draw()
-            #self.boo.kill()
+            self.boo_state = VISIBLE_BOO
             self.score-=2
+            arcade.sound.play_sound ("ScreamSound.wav")
 
         if self.score < 0:
             self.current_state = GAME_OVER
@@ -239,11 +260,17 @@ class MyGame(arcade.Window):
         output = "Click anywhere to restart"
         arcade.draw_text(output, 350, 300, arcade.color.WHITE, 24)
 
+    def draw_boo(self):
+        self.boo_sprite.draw()
+        
+        self.boo_state = INVISIBLE_BOO
+        self.boo_sprite.kill()
 
 def main():
     """ Main method """
     window = MyGame(SCREEN_WIDTH, SCREEN_HEIGHT)
     window.setup()
+    playMusic()
     arcade.run()
 
 
