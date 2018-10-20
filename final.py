@@ -11,14 +11,14 @@ GHOST_SCALING = 0.07
 SCREEN_WIDTH = 1024
 SCREEN_HEIGHT = 768
 
-NUMBER_OF_COINS = 25
+NUMBER_OF_COINS = 25 #Also change in self.coins_left
 NUMBER_OF_GHOSTS = 15
 
 MOVEMENT_SPEED = 5
 
 GAME_RUNNING = 0
 GAME_OVER = 1
-
+GAME_WON = 2
 
 INVISIBLE_BOO = 0
 VISIBLE_BOO = 1
@@ -74,6 +74,7 @@ class MyGame(arcade.Window):
 
         # Set up the player
         self.score = 0
+        self.coins_left = 25
         self.player_sprite = arcade.Sprite("pumpkin.png", SPRITE_SCALING)
         self.player_sprite.center_x = 50
         self.player_sprite.center_y = 64
@@ -202,6 +203,8 @@ class MyGame(arcade.Window):
         if self.current_state == GAME_OVER:
             # Draw game over screen.
             self.draw_game_over()
+        elif self.current_state == GAME_WON:
+            self.draw_game_won()
         else:
             # Draw all the sprites.
             self.wall_list.draw()
@@ -246,6 +249,7 @@ class MyGame(arcade.Window):
 
         for coin in coins_hit_list:
             coin.kill()
+            self.coins_left-=1
             self.score+=1
 
         for ghost in ghosts_hit_list:
@@ -257,6 +261,9 @@ class MyGame(arcade.Window):
         if self.score < 0:
             self.current_state = GAME_OVER
 
+        if self.coins_left == 0:
+            self.current_state = GAME_WON
+
         # Call update on all sprites (The sprites don't do much in this
         # example though.)
         self.physics_engine.update()
@@ -265,8 +272,9 @@ class MyGame(arcade.Window):
         output = "GAME OVER"
         arcade.draw_text(output, 350, 450, arcade.color.WHITE, 54)
 
-        output = "Click anywhere to restart"
-        arcade.draw_text(output, 350, 300, arcade.color.WHITE, 24)
+    def draw_game_won(self):
+        output = "YOU WON!"
+        arcade.draw_text(output, 350, 300, arcade.color.WHITE, 54)
 
     def draw_boo(self):
         self.boo_sprite.draw()
