@@ -2,6 +2,8 @@ import arcade
 import random
 import time
 import pygame
+import sys
+from subprocess import call
 
 SPRITE_SCALING = 0.025
 BOX_SCALING = 0.1
@@ -260,7 +262,10 @@ class MyGame(arcade.Window):
             ghost.kill()
             self.boo_state = VISIBLE_BOO
             self.score-=2
-            arcade.sound.play_sound ("ScreamSound.wav")
+            if sys.platform == 'darwin':
+                call(["afplay","ScreamSound.mp3"])
+            else:
+                arcade.sound.play_sound("ScreamSound.mp3")
 
         if self.score < 0:
             self.current_state = GAME_OVER
